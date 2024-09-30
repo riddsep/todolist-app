@@ -7,7 +7,6 @@ function App() {
   const [edit, setEdit] = useState({});
   const [message, setMessage] = useState("");
 
-  console.log(edit);
   function generateId() {
     return Date.now();
   }
@@ -65,7 +64,6 @@ function App() {
     const updateTodos = [...todos];
     updateTodos[matchingTodo] = updateTodo;
     setTodos(updateTodos);
-    console.log(updateTodos);
   }
 
   return (
