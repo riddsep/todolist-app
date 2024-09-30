@@ -14,7 +14,7 @@ function App() {
 
   function saveHandlerTodo(e) {
     e.preventDefault();
-    if (!activity) return setMessage("data tidak boleh kosong");
+    if (!activity) return setMessage("Data tidak boleh kosong");
     setMessage("");
 
     if (edit.id) {
