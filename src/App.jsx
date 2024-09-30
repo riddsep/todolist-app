@@ -5,6 +5,7 @@ function App() {
   const [activity, setActivity] = useState("");
   const [todos, setTodos] = useState([]);
   const [edit, setEdit] = useState({});
+  const [message, setMessage] = useState("");
 
   console.log(edit);
   function generateId() {
@@ -13,10 +14,12 @@ function App() {
 
   function saveHandlerTodo(e) {
     e.preventDefault();
+    if (!activity) return setMessage("data tidak boleh kosong");
+    setMessage("");
 
     if (edit.id) {
       const updateTodo = {
-        id: edit.id,
+        ...edit,
         activity,
       };
       const matchingTodo = todos.findIndex((todo) => todo.id === edit.id);
@@ -30,7 +33,8 @@ function App() {
       ...todos,
       {
         id: generateId(),
-        activity: activity,
+        activity,
+        done: false,
       },
     ]);
     setActivity("");
@@ -49,10 +53,25 @@ function App() {
     setEdit({});
     setActivity("");
   }
+  function doneTodoHandler(todo) {
+    const updateTodo = {
+      ...todo,
+      done: todo.done ? false : true,
+    };
+
+    const matchingTodo = todos.findIndex(
+      (currentTodo) => currentTodo.id === todo.id
+    );
+    const updateTodos = [...todos];
+    updateTodos[matchingTodo] = updateTodo;
+    setTodos(updateTodos);
+    console.log(updateTodos);
+  }
 
   return (
     <>
       <h1>Simple TodoList</h1>
+      <p>{message}</p>
       <form onSubmit={saveHandlerTodo}>
         <div>
           <input
@@ -67,29 +86,39 @@ function App() {
           {edit.id && <button onClick={cancelHandlerTodo}>Batal edit</button>}
         </div>
       </form>
-      <ul>
-        {todos.map((todo) => {
-          return (
-            <li key={todo.id}>
-              {todo.activity}{" "}
-              <button
-                onClick={() => {
-                  editHandlerTodo(todo);
-                }}
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => {
-                  removeHandlerTodo(todo.id);
-                }}
-              >
-                Hapus
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {todos.length > 0 ? (
+        <ul>
+          {todos.map((todo) => {
+            return (
+              <li key={todo.id}>
+                <input
+                  type="checkbox"
+                  name="done"
+                  checked={todo.done}
+                  onChange={() => doneTodoHandler(todo)}
+                />
+                {todo.activity}({todo.done ? "selesai" : "belum selesai"})
+                <button
+                  onClick={() => {
+                    editHandlerTodo(todo);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => {
+                    removeHandlerTodo(todo.id);
+                  }}
+                >
+                  Hapus
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p>Belum ada aktivitas</p>
+      )}
     </>
   );
 }
