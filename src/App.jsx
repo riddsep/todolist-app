@@ -5,6 +5,7 @@ function App() {
   const [activity, setActivity] = useState("");
   const [todos, setTodos] = useState([]);
   const [edit, setEdit] = useState({});
+  const [message, setMessage] = useState("");
 
   console.log(edit);
   function generateId() {
@@ -13,6 +14,7 @@ function App() {
 
   function saveHandlerTodo(e) {
     e.preventDefault();
+    if (!activity) return setMessage("data tidak boleh kosong");
 
     if (edit.id) {
       const updateTodo = {
@@ -53,6 +55,7 @@ function App() {
   return (
     <>
       <h1>Simple TodoList</h1>
+      <p>{message}</p>
       <form onSubmit={saveHandlerTodo}>
         <div>
           <input
